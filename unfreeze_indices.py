@@ -5,11 +5,11 @@ import argparse
 def unfreeze_all_indices(es_client):
     try:
         # Get all frozen indices (indices with the 'frozen' attribute)
-        frozen_indices = es_client.cat.indices(index='*', h='index,settings.index.frozen', format='json')
+        frozen_indices = es_client.cat.indices(index='*', h='index,search.throttled', format='json')
         
         indices_to_unfreeze = []
         for idx in frozen_indices:
-            if idx.get('settings.index.frozen') == 'true':
+            if idx.get('search.throttled') == 'true':
                 indices_to_unfreeze.append(idx['index'])
         
         if not indices_to_unfreeze:
@@ -24,7 +24,7 @@ def unfreeze_all_indices(es_client):
         success_count = 0
         for index_name in indices_to_unfreeze:
             try:
-                es_client.index.open(index=index_name)
+                es_client.indices.unfreeze(index=index_name)
                 print(f"Successfully unfroze index: {index_name}")
                 success_count += 1
             except Exception as e:
