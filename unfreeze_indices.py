@@ -40,7 +40,7 @@ def main():
     parser.add_argument('--host', default='http://localhost:9200', help='Elasticsearch host URL')
     parser.add_argument('--username', help='Elasticsearch username')
     parser.add_argument('--password', help='Elasticsearch password')
-    parser.add_argument('--verify-certs', action='store_true', help='Verify SSL certificates')
+    parser.add_argument('--verify-certs', action='store_false', help='Verify SSL certificates')
     
     args = parser.parse_args()
     
@@ -51,7 +51,7 @@ def main():
     }
     
     if args.username and args.password:
-        es_config['http_auth'] = (args.username, args.password)
+        es_config['basic_auth'] = (args.username, args.password)
     
     try:
         es = Elasticsearch(**es_config)

@@ -1,7 +1,7 @@
 # Elasticsearch Administration Scripts
 
 ![Python](https://img.shields.io/badge/Python-3.6+-blue.svg)
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-7.17.x-orange.svg)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.1-orange.svg)
 ![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)
 
 A collection of Python scripts for managing Elasticsearch clusters, with a focus on index operations and maintenance tasks.
@@ -20,15 +20,16 @@ A collection of Python scripts for managing Elasticsearch clusters, with a focus
 
 - **Index Management**:
   - Unfreeze frozen indices
+  - Reindex index range
 
 ## Requirements
 
 - Python 3.6+
-- Elasticsearch 7.17.x
+- Elasticsearch 8.19.1
 - Required Python packages:
   
   ```text
-  elasticsearch==7.17.0
+  elasticsearch==8.15.1
   ```
 
 ## Installation
@@ -66,12 +67,28 @@ Unfreezes all frozen indices in the cluster.
 python unfreeze_indices.py [--host HOST] [--username USERNAME] [--password PASSWORD]
 ```
 
+### `reindex_elasticsearch.py`
+
+Reindex a range of indexes in Elasticsearch.
+
+**Usage**:
+
+```bash
+python reindex_elasticsearch.py --host <HOST> --username <USERNAME> --password <PASSWORD> --start-index <START_INDEX> --end-index <END_INDEX>
+```
+
 ## Usage Examples
 
 ### Basic Unfreeze Operation
 
 ```bash
 python unfreeze_indices.py --host https://es-cluster:9200
+```
+
+### Basic Reindex Operation
+
+```bash
+python reindex_elasticsearch.py --host http://localhost:9200 --username elastic --password yourpassword --start-index fg-009783 --end-index fg-009789
 ```
 
 ## Contributing
