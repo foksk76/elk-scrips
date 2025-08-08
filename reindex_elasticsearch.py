@@ -6,7 +6,7 @@ import re
 
 def validate_index_name(index_name):
     """Validate index name format (e.g., fg-009783)."""
-    pattern = r'^fg-\d{6}$'
+    pattern = r'^[A-Za-z]+-\d{6}$'
     return bool(re.match(pattern, index_name))
 
 def parse_index_range(start_index, end_index):
@@ -70,7 +70,7 @@ def main():
 
     # Validate index names
     if not (validate_index_name(args.start_index) and validate_index_name(args.end_index)):
-        print("Index names must be in format 'fg-######' (e.g., fg-009783)")
+        print("Index names must be in format 'adc-######' (e.g., fg-009783)")
         sys.exit(1)
 
     # Initialize Elasticsearch client
