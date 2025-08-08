@@ -21,8 +21,8 @@ def parse_index_range(start_index, end_index):
     except ValueError as e:
         raise ValueError(f"Invalid index format: {str(e)}")
 
-def reindex(es_client, source_index, dest_index):
-    """Reindex a single index."""
+def reindex(es_client, source_index, dest_index, alias=None):
+    """Reindex a single index and optionally assign an alias."""
     try:
         # Check if source index exists
         if not es_client.indices.exists(index=source_index):
@@ -32,6 +32,14 @@ def reindex(es_client, source_index, dest_index):
         # Create destination index if it doesn't exist
         if not es_client.indices.exists(index=dest_index):
             es_client.indices.create(index=dest_index)
+
+        # Add alias to the reindexed index if specified
+        if alias:
+            try:
+                es_client.indices.put_alias(index=dest_index, name=alias)
+                print(f"Added alias {alias} to {dest_index}")
+            except Exception as e:
+                print(f"Error adding alias {alias} to {dest_index}: {str(e)}")
         
         # Perform reindex
         response = es_client.reindex(
@@ -43,6 +51,7 @@ def reindex(es_client, source_index, dest_index):
         )
         print(f"Reindexed {source_index} to {dest_index}: {response['took']}ms, "
               f"Created: {response['created']}, Updated: {response['updated']}")
+
         return True
     except Exception as e:
         print(f"Error reindexing {source_index} to {dest_index}: {str(e)}")
@@ -55,6 +64,7 @@ def main():
     parser.add_argument('--password', help='Elasticsearch password')
     parser.add_argument('--start-index', required=True, help='Start index name (e.g., fg-009783)')
     parser.add_argument('--end-index', required=True, help='End index name (e.g., fg-009789)')
+    parser.add_argument('--alias', help='Alias to assign to reindexed indexes')
     
     args = parser.parse_args()
 
@@ -84,7 +94,7 @@ def main():
     for source_index in indexes:
         dest_index = f"{source_index}-reindexed"
         print(f"Starting reindex from {source_index} to {dest_index}")
-        success = reindex(es_client, source_index, dest_index)
+        success = reindex(es_client, source_index, dest_index, args.alias)
         if success:
             print(f"Successfully reindexed {source_index}")
         else:
