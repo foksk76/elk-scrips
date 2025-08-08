@@ -69,7 +69,7 @@ def main():
             [args.host],
             basic_auth=(args.username, args.password) if args.username and args.password else None
         )
-    except exceptions.ElasticsearchException as e:
+    except Exception as e:
         print(f"Failed to connect to Elasticsearch: {str(e)}")
         sys.exit(1)
 
