@@ -41,6 +41,20 @@ def reindex(es_client, source_index, dest_index, alias=None):
             except Exception as e:
                 print(f"Error adding alias {alias} to {dest_index}: {str(e)}")
         
+            # Set index.lifecycle.indexing_complete to true
+            try:
+                es_client.indices.put_settings(
+                    index=dest_index,
+                    body={
+                        "settings": {
+                            "index.lifecycle.indexing_complete": True
+                        }
+                    }
+                )
+                print(f"Set index.lifecycle.indexing_complete=true for {dest_index}")
+            except Exception as e:
+                print(f"Warning: Could not set indexing_complete for {dest_index}: {e}")
+                
         # Perform reindex
         response = es_client.reindex(
             body={
