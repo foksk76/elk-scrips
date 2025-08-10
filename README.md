@@ -24,7 +24,7 @@ A collection of Python scripts for managing Elasticsearch clusters, with a focus
 
 ## Requirements
 
-- Python 3.6+
+- Python 3.8+
 - Elasticsearch 8.19.1
 - Required Python packages:
   
