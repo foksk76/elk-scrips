@@ -64,7 +64,7 @@ Unfreezes all frozen indices in the cluster.
 **Usage**:
 
 ```bash
-python unfreeze_indices.py [--host HOST] [--username USERNAME] [--password PASSWORD]
+python unfreeze_indices.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] [--verify-certs <VERIFY-CERTS>]
 ```
 
 ### `reindex_elasticsearch.py`
@@ -74,7 +74,7 @@ Reindex a range of indexes in Elasticsearch.
 **Usage**:
 
 ```bash
-python reindex_elasticsearch.py --host <HOST> --username <USERNAME> --password <PASSWORD> --start-index <START_INDEX> --end-index <END_INDEX>
+python reindex_elasticsearch.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] --start-index <START_INDEX> --end-index <END_INDEX> [--alias ALIAS] [--verify-certs VERIFY-CERTS]
 ```
 
 ## Usage Examples
