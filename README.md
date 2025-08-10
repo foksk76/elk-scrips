@@ -1,6 +1,6 @@
 # Elasticsearch Administration Scripts
 
-![Python](https://img.shields.io/badge/Python-3.6+-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.19.1-orange.svg)
 ![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)
 
@@ -29,7 +29,7 @@ A collection of Python scripts for managing Elasticsearch clusters, with a focus
 - Required Python packages:
   
   ```text
-  elasticsearch==8.15.1
+  elasticsearch==8.19.1
   ```
 
 ## Installation
