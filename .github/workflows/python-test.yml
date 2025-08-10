@@ -1,27 +1,17 @@
-name: Python Tests with Elasticsearch
+name: Python Tests
 
 on:
   push:
     branches: [main]
+    tags:
+      - 'v*'
+
   pull_request:
     branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
-        ports:
-          - 9200:9200
-        options: >-
-          --health-cmd "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"'" 
-          --health-interval 10s
-          --health-timeout 120s
-          --health-retries 10
-        env:
-          discovery.type: single-node
-          ES_JAVA_OPTS: "-Xms2g -Xmx2g"
 
     steps:
       - name: Checkout repository
@@ -37,15 +27,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wait for Elasticsearch to be ready
-        run: |
-          until curl -s http://localhost:9200 >/dev/null; do
-            echo "Waiting for Elasticsearch..."
-            sleep 5
-          done
-
       - name: Run pytest tests
-        env:
-          ES_HOST: http://localhost:9200
         run: |
           pytest tests/
