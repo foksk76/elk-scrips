@@ -85,7 +85,7 @@ def main():
 
     # Validate index names
     if not (validate_index_name(args.start_index) and validate_index_name(args.end_index)):
-        print("Index names must be in format 'adc-######' (e.g., fg-009783)")
+        print("Index names must be in format '<prefix>-######' (e.g., fg-009783)")
         sys.exit(1)
 
     # Initialize Elasticsearch client
@@ -93,7 +93,7 @@ def main():
         es_client = Elasticsearch(
             [args.host],
             basic_auth=(args.username, args.password) if args.username and args.password else None,
-            verify_certs: args.verify_certs
+            verify_certs=args.verify_certs
         )
     except Exception as e:
         print(f"Failed to connect to Elasticsearch: {str(e)}")
