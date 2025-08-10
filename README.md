@@ -37,7 +37,7 @@ A collection of Python scripts for managing Elasticsearch clusters, with a focus
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/elk-scripts.git
+git clone https://github.com/foksk76/elk-scripts.git
 cd elk-scripts
 ```
 

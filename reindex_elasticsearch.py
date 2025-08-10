@@ -79,6 +79,7 @@ def main():
     parser.add_argument('--start-index', required=True, help='Start index name (e.g., fg-009783)')
     parser.add_argument('--end-index', required=True, help='End index name (e.g., fg-009789)')
     parser.add_argument('--alias', help='Alias to assign to reindexed indexes')
+    parser.add_argument('--verify-certs', action='store_false', help='Verify SSL certificates')
     
     args = parser.parse_args()
 
@@ -91,7 +92,8 @@ def main():
     try:
         es_client = Elasticsearch(
             [args.host],
-            basic_auth=(args.username, args.password) if args.username and args.password else None
+            basic_auth=(args.username, args.password) if args.username and args.password else None,
+            verify_certs: args.verify_certs
         )
     except Exception as e:
         print(f"Failed to connect to Elasticsearch: {str(e)}")
