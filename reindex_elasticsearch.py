@@ -1,25 +1,38 @@
 import argparse
 from elasticsearch import Elasticsearch
-from elasticsearch.exceptions import NotFoundError, TransportError
 import sys
 import re
+
 
 def validate_index_name(index_name):
     """Validate index name format (e.g., fg-009783)."""
     pattern = r'^[A-Za-z]+-\d{6}$'
     return bool(re.match(pattern, index_name))
 
+
 def parse_index_range(start_index, end_index):
-    """Parse index range and return list of index names."""
     try:
-        start_num = int(start_index.split('-')[-1])
-        end_num = int(end_index.split('-')[-1])
+        start_parts = start_index.split('-')
+        end_parts = end_index.split('-')
+        if len(start_parts) < 2 or len(end_parts) < 2:
+            raise ValueError("Index names must contain a prefix and number separated by '-'")
+
+        prefix_start = '-'.join(start_parts[:-1])
+        prefix_end = '-'.join(end_parts[:-1])
+
+        if prefix_start != prefix_end:
+            raise ValueError("Start and end index prefixes do not match.")
+
+        start_num = int(start_parts[-1])
+        end_num = int(end_parts[-1])
         if start_num > end_num:
             raise ValueError("Start index number must be less than or equal to end index number.")
-        prefix = start_index[:start_index.rfind('-')]
-        return [f"{prefix}-{str(i).zfill(6)}" for i in range(start_num, end_num + 1)]
+
+        return [f"{prefix_start}-{str(i).zfill(6)}" for i in range(start_num, end_num + 1)]
+
     except ValueError as e:
         raise ValueError(f"Invalid index format: {str(e)}")
+
 
 def reindex(es_client, source_index, dest_index, alias=None):
     """Reindex a single index and optionally assign an alias."""
@@ -40,7 +53,7 @@ def reindex(es_client, source_index, dest_index, alias=None):
                 print(f"Added alias {alias} to {dest_index}")
             except Exception as e:
                 print(f"Error adding alias {alias} to {dest_index}: {str(e)}")
-        
+
             # Set index.lifecycle.indexing_complete to true
             try:
                 es_client.indices.put_settings(
@@ -54,7 +67,7 @@ def reindex(es_client, source_index, dest_index, alias=None):
                 print(f"Set index.lifecycle.indexing_complete=true for {dest_index}")
             except Exception as e:
                 print(f"Warning: Could not set indexing_complete for {dest_index}: {e}")
-                
+
         # Perform reindex
         response = es_client.reindex(
             body={
@@ -71,6 +84,7 @@ def reindex(es_client, source_index, dest_index, alias=None):
         print(f"Error reindexing {source_index} to {dest_index}: {str(e)}")
         return False
 
+
 def main():
     parser = argparse.ArgumentParser(description="Reindex Elasticsearch indexes.")
     parser.add_argument('--host', default='localhost:9200', help='Elasticsearch host (default: localhost:9200)')
@@ -79,8 +93,9 @@ def main():
     parser.add_argument('--start-index', required=True, help='Start index name (e.g., fg-009783)')
     parser.add_argument('--end-index', required=True, help='End index name (e.g., fg-009789)')
     parser.add_argument('--alias', help='Alias to assign to reindexed indexes')
-    parser.add_argument('--verify-certs', action='store_false', help='Verify SSL certificates')
-    
+    parser.add_argument('--no-verify-certs', action='store_false', dest='verify_certs',
+                        help='Disable SSL certificate verification')
+
     args = parser.parse_args()
 
     # Validate index names
@@ -115,6 +130,7 @@ def main():
             print(f"Successfully reindexed {source_index}")
         else:
             print(f"Failed to reindex {source_index}")
+
 
 if __name__ == "__main__":
     main()

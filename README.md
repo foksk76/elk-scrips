@@ -64,7 +64,7 @@ Unfreezes all frozen indices in the cluster.
 **Usage**:
 
 ```bash
-python unfreeze_indices.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] [--verify-certs <VERIFY-CERTS>]
+python unfreeze_indices.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] [--no-verify-certs]
 ```
 
 ### `reindex_elasticsearch.py`
@@ -74,8 +74,18 @@ Reindex a range of indexes in Elasticsearch.
 **Usage**:
 
 ```bash
-python reindex_elasticsearch.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] --start-index <START_INDEX> --end-index <END_INDEX> [--alias ALIAS] [--verify-certs VERIFY-CERTS]
+python reindex_elasticsearch.py [--host <HOST>] [--username <USERNAME>] [--password <PASSWORD>] --start-index <START_INDEX> --end-index <END_INDEX> [--alias ALIAS] [--no-verify-certs]
 ```
+
+**Command-line arguments:**
+
+- `--host` — Elasticsearch host address (default: `localhost:9200`)
+- `--username` — Username for authentication (if required)
+- `--password` — Password for authentication (if required)
+- `--start-index` — Start index name (e.g., `fg-000001`)
+- `--end-index` — End index name (e.g., `fg-000010`)
+- `--alias` — Alias to assign to the new indices
+- `--no-verify-certs` — Disable SSL certificate verification (enabled by default)
 
 ## Usage Examples
 
